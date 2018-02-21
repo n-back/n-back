@@ -8,10 +8,12 @@
       button.home @click="home"
         | Home
     .content
-      .number v-if="status == STATUS_START || status == STATUS_PREPARE"
-        | {{ solutions.length + ' / ' + (count + level) }}
+      .number
+        | {{ status == STATUS_START ? (solutions.length - level) + ' / ' + count : '' }}
       .question
         | {{ question }}
+      .progress v-if="status == STATUS_PREPARE"
+        .inner :style="{width: progressValue + '%'}"
       .status v-if="status == STATUS_START"
         span.correct
           | {{correct}}
@@ -31,19 +33,25 @@
     .bottom-bar
       .copyright
         | 2018 @Xiaobawang
-      a.about href="https://github.com/n-back"
+      a.about href="https://github.com/n-back/n-back"
         | About N-back
     .welcome.cover v-if="isShowWelcome"
       .inner
-        h1 Welcome N-back Training!!
+        h1 Welcome to N-back Training!!
         .buttons
           button v-for="i in 9" @click="start(i)"
             | N={{i}}
         h2 Choose one
         h3 Answer question before N questions
+        h3 Select last number
     .result.cover v-if="status == STATUS_STOPED"
       .inner
         .infos
+          .level.item
+            label
+              | N =
+            .n
+              | {{ level }}
           .score.item
             label
               | Score:
@@ -88,6 +96,7 @@ function generateData (data) {
     total: 0,
     count: 10,
     time: '0s',
+    progressValue: 100,
     solutions: [],
     answerHistory: [],
     isShowWelcome: false,
@@ -141,6 +150,9 @@ function generateQuestion () {
   return calcs[randomNumber(calcs.length) % calcs.length]()
 }
 
+var questionTimeout = null
+var selectTimeout = null
+
 export default {
   name: 'NBack',
   data () {
@@ -167,7 +179,7 @@ export default {
         this.status = STATUS_STOPED
         return
       }
-      setTimeout(() => {
+      selectTimeout = setTimeout(() => {
         a.correct = ''
         this.updateQuestion()
         this.isAnswering = false
@@ -178,25 +190,43 @@ export default {
       let a = () => {
         if (this.status === STATUS_START && this.total < this.count) {
           this.time = (++time / 100) + 's'
-          setTimeout(a, 10)
+          questionTimeout = setTimeout(a, 10)
         }
       }
-      setTimeout(a, 10)
+      questionTimeout = setTimeout(a, 10)
     },
     showQuestion () {
       this.updateQuestion()
-      if (this.solutions.length <= this.level) setTimeout(() => this.showQuestion(), 1500)
-      else {
+      if (this.solutions.length <= this.level) {
+        let time = 1500
+        var timeNow = time
+        let counter = () => {
+          if (timeNow === 0) {
+            this.showQuestion()
+            return
+          }
+          timeNow -= 10
+          this.progressValue = timeNow * 100 / time
+          questionTimeout = setTimeout(counter, 10)
+        }
+        questionTimeout = setTimeout(counter, 10)
+      } else {
         this.status = STATUS_START
         this.startTimeCount()
       }
     },
+    reset () {
+      clearTimeout(questionTimeout)
+      clearTimeout(selectTimeout)
+    },
     start (level) {
-      Object.assign(this, generateData({level}))
+      this.reset()
+      Object.assign(this, generateData({level, count: level + 10}))
       this.status = STATUS_PREPARE
       this.showQuestion()
     },
     home () {
+      this.reset()
       Object.assign(this, generateData())
       this.isShowWelcome = true
     }
@@ -210,9 +240,12 @@ export default {
 <style scoped lang="scss">
   $color-green: green;
   $color-red: red;
+  $color-gray: gray;
   $color-correct: $color-green;
   $color-error: $color-red;
   $color-dark: #333;
+  $topbar-height: .5rem;
+  $bottombar-height: .4rem;
   .page {
     display: flex;
     flex-direction: column;
@@ -220,7 +253,7 @@ export default {
     >.top-bar {
       background: $color-dark;
       font-size: .2rem;
-      height: .5rem;
+      height: $topbar-height;
       color: white;
       display: flex;
       align-items: center;
@@ -247,24 +280,37 @@ export default {
     >.content {
       .number {
         padding: .2rem;
+        height: .2rem;
         font-size: .2rem;
         text-align: center;
       }
       .question {
-        margin-top: 30%;
+        margin-top: .6rem;
         padding: .2rem;
         font-size: .4rem;
         text-align: center;
+      }
+      .progress {
+        border: solid 1px #aaa;
+        margin: 0 10%;
+        .inner {
+          width: 100%;
+          height: .05rem;
+          background: $color-green;
+        }
       }
       .answer {
         display: flex;
         width: 100%;
         height: 1rem;
+        margin-top: .2rem;
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;
         .item {
           width: calc(20% - .1rem * 2);
+          height: .6rem;
+          line-height: .5rem;
           padding: .05rem;
           margin: .05rem;
           border-radius: .05rem;
@@ -296,8 +342,10 @@ export default {
       }
       .time {
         position: fixed;
-        left: .2rem;
-        bottom: .5rem;
+        left: .4rem;
+        bottom: .6rem;
+        font-size: .2rem;
+        text-align: center;
       }
     }
     >.cover {
@@ -305,8 +353,8 @@ export default {
       position: fixed;
       left: 0;
       right: 0;
-      top: 0;
-      bottom: 0;
+      top: $topbar-height;
+      bottom: $bottombar-height;
       background: rgba(0,0,0, .5);
       display: flex;
       align-items: center;
@@ -337,6 +385,8 @@ export default {
           margin: 0;
         }
         .buttons {
+          padding: 0 .1rem;
+          margin-bottom: .1rem;
           button {
             width: calc(33% - .05rem * 2);
             box-sizing: border-box;
@@ -363,8 +413,8 @@ export default {
         height: $height;
         border-radius: .2rem;
         .infos {
+          font-size: .2rem;
           label {
-            font-size: .2rem;
             margin-right: .1rem;
           }
           .item {
@@ -374,7 +424,6 @@ export default {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                font-size: .2rem;
                 span {
                   &.correct {
                     color: $color-correct;
@@ -385,10 +434,9 @@ export default {
                 }
               }
             }
-            &.spend {
-              .time {
-                font-size: .2rem;
-              }
+            &.level {
+              justify-content: center;
+              font-size: .3rem;
             }
           }
         }
@@ -415,6 +463,7 @@ export default {
       }
     }
     .bottom-bar {
+      height: $bottombar-height;
       position: fixed;
       left: 0;
       right: 0;
@@ -422,6 +471,7 @@ export default {
       display: flex;
       padding: .1rem;
       color: gray;
+      box-sizing: border-box;
       justify-content: space-between;
       border-top: solid 1px #eee;
       a {
