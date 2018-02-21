@@ -10,8 +10,10 @@
     .content
       .number
         | {{ status == STATUS_START ? (solutions.length - level) + ' / ' + count : '' }}
-      .question
+      .question v-if="solutions.length <= count"
         | {{ question }}
+      .question v-else=""
+        | --------------
       .progress v-if="status == STATUS_PREPARE"
         .inner :style="{width: progressValue + '%'}"
       .status v-if="status == STATUS_START"
@@ -288,6 +290,8 @@ export default {
         margin-top: .6rem;
         padding: .2rem;
         font-size: .4rem;
+        line-height: .4rem;
+        height: .4rem;
         text-align: center;
       }
       .progress {
