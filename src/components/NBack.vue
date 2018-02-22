@@ -4,9 +4,9 @@
       span
         | N-back {{ (status == STATUS_START || status == STATUS_PREPARE) ? ('(n=' + level + ')') : '' }}
       button.retry @click="start(level)"
-        | Retry
+        i.fa.fa-refresh
       button.home @click="home"
-        | Home
+        i.fa.fa-home
     .content
       .number v-if="status == STATUS_START || status == STATUS_PREPARE"
         span.q
@@ -30,19 +30,20 @@
       .progress v-if="status == STATUS_PREPARE"
         .inner :style="{width: progressValue + '%'}"
       .time v-if="status == STATUS_START"
-        | {{ 'Spend: ' + time }}
+        i.fa.fa-hourglass-half
+        span {{ ' = ' + time }}
     .bottom-bar
       .copyright
         | 2018 @Xiaobawang
       a.about href="https://github.com/n-back/n-back"
-        | About N-back
+        i.fa.fa-github
     .welcome.cover v-if="isShowWelcome"
       .inner
-        h1 Welcome to N-back Training!!
+        h1 N-back
+        h2 Choose N=?
         .buttons
           button v-for="i in 9" @click="start(i)"
             | N={{i}}
-        h2 Choose N=?
         h3 Giving No.X question,
         h3 answering No.(X-N) question.
         h3 ="(Only need last digit)"
@@ -56,18 +57,18 @@
               | {{ level }}
           .score.item
             label
-              | Score:
+              i.fa.fa-heartbeat
             Score :correct="correct" :incorrect="incorrect" :total="total"
           .spend.item
             label
-              | Spend:
+              i.fa.fa-hourglass-end
             .time
               | {{ time }}
         .buttons
           button.again @click="start(level)"
-            | Again
+            i.fa.fa-refresh
           button.home @click="home"
-            | Home
+            i.fa.fa-home
 </template>
 
 <script>
@@ -251,12 +252,11 @@ export default {
       button {
         z-index: 1;
         margin: 0 .1rem;
-        border: solid 1px white;
-        border-radius: .05rem;
         padding: .06rem;
         text-align: left;
-        font-size: .15rem;
+        font-size: .20rem;
         color: white;
+        border: none;
         background: $color-dark;
       }
       span {
@@ -348,10 +348,13 @@ export default {
       }
       .time {
         position: fixed;
-        left: .4rem;
+        left: 40%;
         bottom: .6rem;
         font-size: .2rem;
         text-align: center;
+        span {
+          width: 2rem;
+        }
       }
     }
     >.cover {
@@ -427,6 +430,7 @@ export default {
           }
           .item {
             display: flex;
+            justify-content: left;
             &.level {
               justify-content: center;
               font-size: .3rem;
@@ -434,17 +438,19 @@ export default {
           }
         }
         .buttons {
-          margin-top: .2rem;
+          margin-top: .1rem;
           display: flex;
           justify-content: center;
           align-items: center;
           flex-wrap: wrap;
+          width: 100%;
           button {
             color: white;
-            font-size: .2rem;
+            font-size: .24rem;
             padding: .1rem;
             margin: .05rem;
             border-radius: .2rem;
+            width: 30%;
             &.home {
               background: $color-red;
             }
@@ -457,12 +463,13 @@ export default {
     }
     .bottom-bar {
       height: $bottombar-height;
+      line-height: $bottombar-height;
+      padding: 0 .1rem;
       position: fixed;
       left: 0;
       right: 0;
       bottom: 0;
       display: flex;
-      padding: .1rem;
       color: gray;
       box-sizing: border-box;
       justify-content: space-between;
@@ -470,6 +477,7 @@ export default {
       a {
         text-decoration:none;
         color: gray;
+        font-size: .24rem;
       }
     }
   }
