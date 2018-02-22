@@ -8,28 +8,27 @@
       button.home @click="home"
         | Home
     .content
-      .number
-        | {{ status == STATUS_START ? (solutions.length - level) + ' / ' + count : '' }}
+      .number v-if="status == STATUS_START || status == STATUS_PREPARE"
+        span.q
+          label Q:
+          span {{ ' ' + (solutions.length > count ? '--' : solutions.length) }}
+        span.a
+          label A:
+          span {{ ' ' + (solutions.length > level ? solutions.length - level : '--') }}
+        span
+          label Sum:
+          span {{ count }}
+      .number v-else=""
       .question v-if="solutions.length <= count"
         | {{ question }}
       .question v-else=""
         | --------------
-      .progress v-if="status == STATUS_PREPARE"
-        .inner :style="{width: progressValue + '%'}"
-      .status v-if="status == STATUS_START"
-        span.correct
-          | {{correct}}
-        span
-          | /
-        span.incorrect
-          | {{incorrect}}
-        span
-          | /
-        span.total
-          | {{total}}
       .answer v-if="status == STATUS_START"
         .item v-for="item in aItems" @click="checkItem(item)" :class="item.correct"
           | {{ item.index }}
+      Score :correct="correct" :incorrect="incorrect" :total="total" v-if="status == STATUS_START"
+      .progress v-if="status == STATUS_PREPARE"
+        .inner :style="{width: progressValue + '%'}"
       .time v-if="status == STATUS_START"
         | {{ 'Spend: ' + time }}
     .bottom-bar
@@ -43,9 +42,10 @@
         .buttons
           button v-for="i in 9" @click="start(i)"
             | N={{i}}
-        h2 Choose one
-        h3 Answer question before N questions
-        h3 Select last number
+        h2 Choose N=?
+        h3 Giving No.X question,
+        h3 answering No.(X-N) question.
+        h3 ="(Only need last digit)"
     .result.cover v-if="status == STATUS_STOPED"
       .inner
         .infos
@@ -57,17 +57,7 @@
           .score.item
             label
               | Score:
-            .status
-              span.correct
-                | {{correct}}
-              span
-                | /
-              span.incorrect
-                | {{incorrect}}
-              span
-                | /
-              span.total
-                | {{total}}
+            Score :correct="correct" :incorrect="incorrect" :total="total"
           .spend.item
             label
               | Spend:
@@ -81,6 +71,8 @@
 </template>
 
 <script>
+import Score from './Score.vue'
+
 let STATUS_NONE = 10
 let STATUS_PREPARE = 11
 let STATUS_START = 12
@@ -157,6 +149,7 @@ var selectTimeout = null
 
 export default {
   name: 'NBack',
+  components: {Score},
   data () {
     return generateData()
   },
@@ -240,12 +233,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $color-green: green;
-  $color-red: red;
-  $color-gray: gray;
-  $color-correct: $color-green;
-  $color-error: $color-red;
-  $color-dark: #333;
+  @import '../theme.scss';
   $topbar-height: .5rem;
   $bottombar-height: .4rem;
   .page {
@@ -280,11 +268,37 @@ export default {
       }
     }
     >.content {
+      display: flex;
+      flex-direction: column;
       .number {
+        align-self: center;
+        display: flex;
+        justify-content: space-between;
+        align-self: center;
+        width: 75%;
+        height: .3rem;
         padding: .2rem;
-        height: .2rem;
         font-size: .2rem;
         text-align: center;
+        >span {
+          width: 30%;
+          label {
+            width: 50%;
+          }
+          span {
+            width: 50%;
+          }
+          &.q {
+            label {
+              color: $color-green;
+            }
+          }
+          &.a {
+            label {
+              color: $color-red;
+            }
+          }
+        }
       }
       .question {
         margin-top: .6rem;
@@ -306,7 +320,6 @@ export default {
       .answer {
         display: flex;
         width: 100%;
-        height: 1rem;
         margin-top: .2rem;
         justify-content: center;
         align-items: center;
@@ -331,18 +344,7 @@ export default {
         }
       }
       .status {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: .2rem;
-        span {
-          &.correct {
-            color: $color-correct;
-          }
-          &.incorrect {
-            color: $color-error;
-          }
-        }
+        margin: .2rem 0;
       }
       .time {
         position: fixed;
@@ -383,10 +385,12 @@ export default {
           text-align: center;
         }
         h2 {
-          margin: 0;
+          margin: 0 0 .1rem;
+          text-align: center;
         }
         h3 {
-          margin: 0;
+          margin: 0 10%;
+          text-align: center;
         }
         .buttons {
           padding: 0 .1rem;
@@ -423,21 +427,6 @@ export default {
           }
           .item {
             display: flex;
-            &.score {
-              .status {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                span {
-                  &.correct {
-                    color: $color-correct;
-                  }
-                  &.incorrect {
-                    color: $color-error;
-                  }
-                }
-              }
-            }
             &.level {
               justify-content: center;
               font-size: .3rem;
