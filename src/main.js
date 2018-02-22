@@ -3,6 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import Env from '@/utils/env.js'
+
+Env.init()
 
 Vue.config.productionTip = false
 

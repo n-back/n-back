@@ -1,12 +1,18 @@
 <template lang="slm">
   .page
     .top-bar
-      span
-        | N-back {{ (status == STATUS_START || status == STATUS_PREPARE) ? ('(n=' + level + ')') : '' }}
       button.retry @click="start(level)"
         i.fa.fa-refresh
+      button
+      span
+        | N-back {{ (status == STATUS_START || status == STATUS_PREPARE) ? ('(n=' + level + ')') : '' }}
+      button.language @click="selectLanguage = !selectLanguage"
+        i.fa.fa-language
       button.home @click="home"
         i.fa.fa-home
+    .language-select v-if="selectLanguage && status == STATUS_NONE"
+      span @click="language('zh-CN')" 中文
+      span @click="language('en-US')" English
     .content
       .number v-if="status == STATUS_START || status == STATUS_PREPARE"
         span.q
@@ -40,13 +46,13 @@
     .welcome.cover v-if="isShowWelcome"
       .inner
         h1 N-back
-        h2 Choose N=?
+        h2 {{ t('Choose') + " N=?" }}
         .buttons
           button v-for="i in 9" @click="start(i)"
             | N={{i}}
-        h3 Giving No.X question,
-        h3 answering No.(X-N) question.
-        h3 ="(Only need last digit)"
+        h3 {{ t('Giving No.X question') + ',' }}
+        h3 {{ t('answer No.(X-N) question') + '.' }}
+        h3 {{ '(' + t('Only need answer last digit of result') + ')' }}
     .result.cover v-if="status == STATUS_STOPED"
       .inner
         .infos
@@ -72,7 +78,11 @@
 </template>
 
 <script>
-import Score from './Score.vue'
+import Score from '@/components/Score.vue'
+import Env from '@/utils/env.js'
+import I18n from '@/utils/i18n.js'
+
+I18n.language(Env.language())
 
 let STATUS_NONE = 10
 let STATUS_PREPARE = 11
@@ -91,6 +101,7 @@ function generateData (data) {
     total: 0,
     count: 10,
     time: '0s',
+    selectLanguage: false,
     progressValue: 100,
     solutions: [],
     answerHistory: [],
@@ -155,6 +166,14 @@ export default {
     return generateData()
   },
   methods: {
+    language (value) {
+      this.selectLanguage = false
+      Env.language(value)
+      location.reload()
+    },
+    t (value) {
+      return I18n.t(value)
+    },
     updateQuestion () {
       if (this.status === STATUS_START || this.status === STATUS_PREPARE) {
         let a = generateQuestion()
@@ -248,9 +267,7 @@ export default {
       color: white;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       button {
-        z-index: 1;
         margin: 0 .1rem;
         padding: .06rem;
         text-align: left;
@@ -260,11 +277,29 @@ export default {
         background: $color-dark;
       }
       span {
-        position: absolute;
-        width: 100%;
+        flex: 1;
         font-size: .2rem;
         font-weight: bold;
         text-align: center;
+      }
+    }
+    >.language-select {
+      position: fixed;
+      z-index: 1001;
+      right: .5rem;
+      top: .5rem;
+      display: flex;
+      flex-direction: column;
+      color: white;
+      border-radius: .05rem;
+      border: solid 1px #aaa;
+      background: $color-dark;
+      span {
+        padding: .08rem .1rem;
+        font-size: .2rem;
+        &+span {
+          border-top: solid .1px white;
+        }
       }
     }
     >.content {
