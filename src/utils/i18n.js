@@ -8,10 +8,11 @@ let locale = {
 }
 
 export default (() => {
+  let defaultLanguage = navigator.systemLanguage || navigator.language
   var language = ''
   return {
     language (value) {
-      language = value.toLocaleLowerCase().replace('_', '-')
+      language = (value || defaultLanguage).toLocaleLowerCase().replace('_', '-')
     },
     t (str) {
       return (locale[language] || {})[str] || str

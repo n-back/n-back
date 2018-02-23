@@ -82,7 +82,7 @@ import Score from '@/components/Score.vue'
 import Env from '@/utils/env.js'
 import I18n from '@/utils/i18n.js'
 
-I18n.language(Env.language())
+I18n.language(Env.get('language'))
 
 let STATUS_NONE = 10
 let STATUS_PREPARE = 11
@@ -168,7 +168,7 @@ export default {
   methods: {
     language (value) {
       this.selectLanguage = false
-      Env.language(value)
+      Env.set('language', value)
       location.reload()
     },
     t (value) {
