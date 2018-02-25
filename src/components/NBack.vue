@@ -11,8 +11,9 @@
       button.home @click="home"
         i.fa.fa-home
     .language-select v-if="selectLanguage && status == STATUS_NONE"
-      span @click="language('zh-CN')" 中文
-      span @click="language('en-US')" English
+      span @click="language('zh_cn')" :class="language() == 'zh_cn' ? 'selected' : '' " 中文简体
+      span @click="language('zh_tw')" :class="language() == 'zh_tw' ? 'selected' : '' " 中文繁體
+      span @click="language('en_us')" :class="language() == 'en_us' ? 'selected' : '' " English
     .content
       .number v-if="status == STATUS_START || status == STATUS_PREPARE"
         span.q
@@ -167,9 +168,12 @@ export default {
   },
   methods: {
     language (value) {
-      this.selectLanguage = false
-      Env.set('language', value)
-      location.reload()
+      if (value != null && value !== I18n.language()) {
+        this.selectLanguage = false
+        Env.set('language', value)
+        location.reload()
+      }
+      return I18n.language()
     },
     t (value) {
       return I18n.t(value)
@@ -299,6 +303,9 @@ export default {
         font-size: .2rem;
         &+span {
           border-top: solid .1px white;
+        }
+        &.selected {
+          color: yellow;
         }
       }
     }
