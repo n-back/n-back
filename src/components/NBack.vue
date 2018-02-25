@@ -1,14 +1,14 @@
 <template lang="slm">
   .page
     .top-bar
-      button.retry @click="start(level)"
+      .button.retry @click="start(level)"
         i.fa.fa-refresh
-      button
+      .button
       span
         | N-back {{ (status == STATUS_START || status == STATUS_PREPARE) ? ('(n=' + level + ')') : '' }}
-      button.language @click="selectLanguage = !selectLanguage"
+      .button.language @click="status == STATUS_NONE ? selectLanguage = !selectLanguage : ''"
         i.fa.fa-language
-      button.home @click="home"
+      .button.home @click="home"
         i.fa.fa-home
     .language-select v-if="selectLanguage && status == STATUS_NONE"
       span v-for="l in languages" @click="language(l.c)" :class="language() == l.c ? 'selected' : '' " {{l.t}}
@@ -16,18 +16,16 @@
       .number v-if="status == STATUS_START || status == STATUS_PREPARE"
         span.q
           label Q:
-          span {{ ' ' + (solutions.length > count ? '--' : solutions.length) }}
+          span {{ ' ' + (questions.length > count ? '--' : questions.length) }}
         span.a
           label A:
-          span {{ ' ' + (solutions.length > level ? solutions.length - level : '--') }}
+          span {{ ' ' + (total > 0 ? total : '--') }}
         span
           label Sum:
           span {{ count }}
       .number v-else=""
-      .question v-if="solutions.length <= count"
-        | {{ question }}
-      .question v-else=""
-        | --------------
+      .question
+        | {{ question || '--------------' }}
       .answer v-if="status == STATUS_START"
         .item v-for="item in aItems" @click="checkItem(item)" :class="item.correct"
           | {{ item.index }}
@@ -107,8 +105,7 @@ function generateData (data) {
       {t: 'English', c: 'en_us'}
     ],
     progressValue: 100,
-    solutions: [],
-    answerHistory: [],
+    questions: [],
     isShowWelcome: false,
     isAnswering: false,
     status: STATUS_NONE,
@@ -184,19 +181,20 @@ export default {
       return I18n.t(value)
     },
     updateQuestion () {
-      if (this.status === STATUS_START || this.status === STATUS_PREPARE) {
+      if ((this.status === STATUS_START || this.status === STATUS_PREPARE) && this.questions.length < this.count) {
         let a = generateQuestion()
         this.question = a.q
-        this.solutions.push(a.a)
+        this.questions.push(a)
+      } else {
+        this.question = null
       }
     },
     checkItem (a) {
       if (this.isAnswering) return
       this.isAnswering = true
-      let answer = this.solutions[this.solutions.length - 1 - this.level]
-      let correct = answer === a.index
+      let question = this.questions[this.total]
+      let correct = question !== null && question.a === a.index
       a.correct = correct ? 'correct' : 'incorrect'
-      this.answerHistory.push(correct)
       correct ? ++this.correct : ++this.incorrect
       ++this.total
       if (this.total >= this.count) {
@@ -221,7 +219,7 @@ export default {
     },
     showQuestion () {
       this.updateQuestion()
-      if (this.solutions.length <= this.level) {
+      if (this.questions.length <= this.level) {
         let time = 1500
         var timeNow = time
         let counter = () => {
@@ -276,7 +274,7 @@ export default {
       color: white;
       display: flex;
       align-items: center;
-      button {
+      .button {
         margin: 0 .1rem;
         padding: .06rem;
         text-align: left;
