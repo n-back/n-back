@@ -11,9 +11,7 @@
       button.home @click="home"
         i.fa.fa-home
     .language-select v-if="selectLanguage && status == STATUS_NONE"
-      span @click="language('zh_cn')" :class="language() == 'zh_cn' ? 'selected' : '' " 中文简体
-      span @click="language('zh_tw')" :class="language() == 'zh_tw' ? 'selected' : '' " 中文繁體
-      span @click="language('en_us')" :class="language() == 'en_us' ? 'selected' : '' " English
+      span v-for="l in languages" @click="language(l.c)" :class="language() == l.c ? 'selected' : '' " {{l.t}}
     .content
       .number v-if="status == STATUS_START || status == STATUS_PREPARE"
         span.q
@@ -103,6 +101,11 @@ function generateData (data) {
     count: 10,
     time: '0s',
     selectLanguage: false,
+    languages: [
+      {t: '中文简体', c: 'zh_cn'},
+      {t: '中文繁體', c: 'zh_tw'},
+      {t: 'English', c: 'en_us'}
+    ],
     progressValue: 100,
     solutions: [],
     answerHistory: [],
@@ -168,10 +171,12 @@ export default {
   },
   methods: {
     language (value) {
-      if (value != null && value !== I18n.language()) {
+      if (value != null) {
         this.selectLanguage = false
-        Env.set('language', value)
-        location.reload()
+        if (value !== I18n.language()) {
+          Env.set('language', value)
+          location.reload()
+        }
       }
       return I18n.language()
     },
@@ -305,7 +310,7 @@ export default {
           border-top: solid .1px white;
         }
         &.selected {
-          color: yellow;
+          color: $color-selected;
         }
       }
     }
