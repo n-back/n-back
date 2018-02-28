@@ -1,11 +1,11 @@
 <template lang="slm">
   .page
     .top-bar
-      .button.retry @click="start(level)"
-        i.fa.fa-refresh
-      .button
       span
         | N-back {{ (status == STATUS_START || status == STATUS_PREPARE) ? ('(n=' + level + ')') : '' }}
+      .button.retry @click="start(level)"
+        i.fa.fa-refresh
+      .space
       .button.language @click="status == STATUS_NONE ? selectLanguage = !selectLanguage : ''"
         i.fa.fa-language
       .button.home @click="home"
@@ -268,6 +268,7 @@ export default {
     flex-direction: column;
     height: 100vh;
     >.top-bar {
+      position: relative;
       background: $color-dark;
       font-size: .2rem;
       height: $topbar-height;
@@ -275,6 +276,7 @@ export default {
       display: flex;
       align-items: center;
       .button {
+        z-index: 1;
         margin: 0 .1rem;
         padding: .06rem;
         text-align: left;
@@ -283,8 +285,14 @@ export default {
         border: none;
         background: $color-dark;
       }
-      span {
+      .space {
         flex: 1;
+      }
+      span {
+        z-index: 0;
+        position: absolute;
+        float: left;
+        width: 100%;
         font-size: .2rem;
         font-weight: bold;
         text-align: center;
