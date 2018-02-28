@@ -27,12 +27,11 @@ let locale = {zh_chs, zh_cht, zh_cn, zh_sg, zh_tw, zh_hk, zh_mo}
 
 export default (() => {
   let defaultLanguage = navigator.systemLanguage || navigator.language
-  var language = ''
+  let standard = (language) => (language || defaultLanguage).toLocaleLowerCase().replace('-', '_')
+  var language = standard()
   return {
     language (value) {
-      if (value != null) {
-        language = (value || defaultLanguage).toLocaleLowerCase().replace('-', '_')
-      }
+      if (value != null) language = standard(value)
       return language
     },
     t (str) {
