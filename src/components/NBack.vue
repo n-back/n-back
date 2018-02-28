@@ -535,7 +535,7 @@ export default {
       box-sizing: border-box;
       border-top: solid 1px #eee;
       .copyright {
-        font-size: .05rem;
+        font-size: .12rem;
         padding-right: .4rem;
         position: absolute;
         top: .05rem;
