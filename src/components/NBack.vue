@@ -36,8 +36,8 @@
         i.fa.fa-hourglass-half
         span {{ ' = ' + time }}
     .bottom-bar
-      .copyright
-        | 2018 @Xiaobawang
+      .copyright :title="config.author"
+        | 2018 @{{config.author}}
       a.about href="https://github.com/n-back/n-back"
         i.fa.fa-github
     .welcome.cover v-if="isShowWelcome"
@@ -81,6 +81,15 @@ import I18n from '@/utils/i18n.js'
 
 I18n.language(Env.get('language'))
 
+let config = {
+  author: '小霸王'
+}
+
+let xhr = new XMLHttpRequest()
+xhr.onload = (result) => Object.assign(config, JSON.parse(result.currentTarget.responseText))
+xhr.open('get', '/config.json')
+xhr.send()
+
 let STATUS_NONE = 10
 let STATUS_PREPARE = 11
 let STATUS_START = 12
@@ -115,6 +124,7 @@ function generateData (data) {
         correct: ''
       }
     }),
+    config,
     ...data
   }
 }
@@ -516,18 +526,26 @@ export default {
     }
     .bottom-bar {
       height: $bottombar-height;
-      line-height: $bottombar-height;
       padding: 0 .1rem;
       position: fixed;
       left: 0;
       right: 0;
       bottom: 0;
-      display: flex;
       color: gray;
       box-sizing: border-box;
-      justify-content: space-between;
       border-top: solid 1px #eee;
+      .copyright {
+        font-size: .05rem;
+        padding-right: .4rem;
+        position: absolute;
+        top: .05rem;
+      }
       a {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: .1rem;
+        line-height: $bottombar-height;
         text-decoration:none;
         color: gray;
         font-size: .24rem;
