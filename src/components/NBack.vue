@@ -1,27 +1,26 @@
 <template lang="slm">
   .page
-    .top-bar
+    header
       span
         | N-back {{ (status == STATUS_START || status == STATUS_PREPARE) ? ('(n=' + level + ')') : '' }}
-      .button.retry @click="start(level)"
+      .button.retry @click="start(level)" v-if="status == STATUS_START || status == STATUS_PREPARE"
         i.fa.fa-refresh
       .space
-      .button.language @click="status == STATUS_NONE ? selectLanguage = !selectLanguage : ''"
+      .button.language @click="selectLanguage = !selectLanguage" v-if="status == STATUS_NONE"
         i.fa.fa-language
       .button.home @click="home"
         i.fa.fa-home
-    .language-select v-if="selectLanguage && status == STATUS_NONE"
-      span v-for="l in languages" @click="language(l.c)" :class="language() == l.c ? 'selected' : '' " {{l.t}}
+    Language#language :show="selectLanguage && status == STATUS_NONE"
     .content
       .number v-if="status == STATUS_START || status == STATUS_PREPARE"
         span.q
-          label Q:
+          span.label Q:
           span {{ ' ' + (questions.length > count ? '--' : questions.length) }}
         span.a
-          label A:
+          span.label A:
           span {{ ' ' + (total > 0 ? total : '--') }}
         span
-          label Sum:
+          span.label Sum:
           span {{ count }}
       .number v-else=""
       .question
@@ -34,10 +33,9 @@
         .inner :style="{width: progressValue + '%'}"
       .time v-if="status == STATUS_START"
         i.fa.fa-hourglass-half
-        span {{ ' = ' + time }}
-    .bottom-bar
-      .copyright :title="config.author"
-        | 2018 @{{config.author}}
+        span {{ " = " + time }}
+    footer
+      .copyright v-html="'2018 @' + config.author"
       a.about href="https://github.com/n-back/n-back"
         i.fa.fa-github
     .welcome.cover v-if="isShowWelcome"
@@ -54,18 +52,18 @@
       .inner
         .infos
           .level.item
-            label
+            .label
               | N =
             .n
               | {{ level }}
           .score.item
-            label
+            span.label
               i.fa.fa-heartbeat
             Score :correct="correct" :incorrect="incorrect" :total="total"
           .spend.item
-            label
+            span.label
               i.fa.fa-hourglass-end
-            .time
+            span.time
               | {{ time }}
         .buttons
           button.again @click="start(level)"
@@ -76,6 +74,7 @@
 
 <script>
 import Score from '@/components/Score.vue'
+import Language from '@/components/Language.vue'
 import Env from '@/utils/env.js'
 import I18n from '@/utils/i18n.js'
 
@@ -87,7 +86,7 @@ let config = {
 
 let xhr = new XMLHttpRequest()
 xhr.onload = (result) => Object.assign(config, JSON.parse(result.currentTarget.responseText))
-xhr.open('get', '/config.json')
+xhr.open('get', '/static/info.json')
 xhr.send()
 
 let STATUS_NONE = 10
@@ -108,11 +107,6 @@ function generateData (data) {
     count: 10,
     time: '0s',
     selectLanguage: false,
-    languages: [
-      {t: '中文简体', c: 'zh_cn'},
-      {t: '中文繁體', c: 'zh_tw'},
-      {t: 'English', c: 'en_us'}
-    ],
     progressValue: 100,
     questions: [],
     isShowWelcome: false,
@@ -172,21 +166,14 @@ var selectTimeout = null
 
 export default {
   name: 'NBack',
-  components: {Score},
+  components: {
+    Score,
+    Language
+  },
   data () {
     return generateData()
   },
   methods: {
-    language (value) {
-      if (value != null) {
-        this.selectLanguage = false
-        if (value !== I18n.language()) {
-          Env.set('language', value)
-          location.reload()
-        }
-      }
-      return I18n.language()
-    },
     t (value) {
       return I18n.t(value)
     },
@@ -277,7 +264,7 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    >.top-bar {
+    header {
       position: relative;
       background: $color-dark;
       font-size: .2rem;
@@ -308,29 +295,13 @@ export default {
         text-align: center;
       }
     }
-    >.language-select {
+    #language {
       position: fixed;
       z-index: 1001;
       right: .5rem;
       top: .5rem;
-      display: flex;
-      flex-direction: column;
-      color: white;
-      border-radius: .05rem;
-      border: solid 1px #aaa;
-      background: $color-dark;
-      span {
-        padding: .08rem .1rem;
-        font-size: .2rem;
-        &+span {
-          border-top: solid .1px white;
-        }
-        &.selected {
-          color: $color-selected;
-        }
-      }
     }
-    >.content {
+    .content {
       display: flex;
       flex-direction: column;
       .number {
@@ -345,26 +316,26 @@ export default {
         text-align: center;
         >span {
           width: 30%;
-          label {
+          .label {
             width: 50%;
           }
           span {
             width: 50%;
           }
           &.q {
-            label {
+            .label {
               color: $color-green;
             }
           }
           &.a {
-            label {
+            .label {
               color: $color-red;
             }
           }
         }
       }
       .question {
-        margin-top: .6rem;
+        margin-top: 10%;
         padding: .2rem;
         font-size: .4rem;
         line-height: .4rem;
@@ -410,17 +381,20 @@ export default {
         margin: .2rem 0;
       }
       .time {
+        width: 100%;
         position: fixed;
-        left: 40%;
         bottom: .6rem;
         font-size: .2rem;
         text-align: center;
         span {
-          width: 2rem;
+          display: inline-block;
+          text-align: left;
+          margin-left: .1rem;
+          width: 1rem;
         }
       }
     }
-    >.cover {
+    .cover {
       z-index: 1000;
       position: fixed;
       left: 0;
@@ -444,7 +418,7 @@ export default {
         border-radius: .2rem;
       }
     }
-    >.welcome {
+    .welcome {
       .inner {
         height: 5rem;
         h1 {
@@ -474,7 +448,7 @@ export default {
         }
       }
     }
-    >.result {
+    .result {
       .inner {
         display: flex;
         flex-direction: column;
@@ -488,7 +462,7 @@ export default {
         border-radius: .2rem;
         .infos {
           font-size: .2rem;
-          label {
+          .label {
             margin-right: .1rem;
           }
           .item {
@@ -524,7 +498,7 @@ export default {
         }
       }
     }
-    .bottom-bar {
+    footer {
       height: $bottombar-height;
       padding: 0 .1rem;
       position: fixed;
@@ -539,8 +513,9 @@ export default {
         padding-right: .4rem;
         position: absolute;
         top: .05rem;
+        bottom: .0rem;
       }
-      a {
+      >a {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -549,6 +524,19 @@ export default {
         text-decoration:none;
         color: gray;
         font-size: .24rem;
+      }
+    }
+  }
+</style>
+
+<style lang="scss">
+  .page {
+    footer {
+      .copyright {
+        a {
+          text-decoration: none;
+          color: gray;
+        }
       }
     }
   }
