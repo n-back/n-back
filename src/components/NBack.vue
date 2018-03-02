@@ -1,17 +1,19 @@
 <template lang="slm">
-  .page
-    header
+  Layout
+    Language#language :show="selectLanguage && status == STATUS_NONE"
+    template slot="header"
       span
         | N-back {{ (status == STATUS_START || status == STATUS_PREPARE) ? ('(n=' + level + ')') : '' }}
-      .button.retry @click="start(level)" v-if="status == STATUS_START || status == STATUS_PREPARE"
+      .button.retry @click="start(level)" v-if="status != STATUS_NONE"
         i.fa.fa-refresh
+      router-link.button.back to="/" v-else=""
+        i.fa.fa-chevron-left
       .space
       .button.language @click="selectLanguage = !selectLanguage" v-if="status == STATUS_NONE"
         i.fa.fa-language
-      .button.home @click="home"
+      .button.home @click="home" v-else=""
         i.fa.fa-home
-    Language#language :show="selectLanguage && status == STATUS_NONE"
-    .content
+    template slot="content"
       .number v-if="status == STATUS_START || status == STATUS_PREPARE"
         span.q
           span.label Q:
@@ -34,45 +36,42 @@
       .time v-if="status == STATUS_START"
         i.fa.fa-hourglass-half
         span {{ " = " + time }}
-    footer
-      .copyright v-html="'2018 @' + config.author"
-      a.about href="https://github.com/n-back/n-back"
-        i.fa.fa-github
-    .welcome.cover v-if="isShowWelcome"
-      .inner
-        h1 N-back
-        h2 {{ t('Choose') + " N=?" }}
-        .buttons
-          button v-for="i in 9" @click="start(i)"
-            | N={{i}}
-        h3 {{ t('Giving No.X question') + ',' }}
-        h3 {{ t('answer No.(X-N) question') + '.' }}
-        h3 {{ '(' + t('Only need answer last digit of result') + ')' }}
-    .result.cover v-if="status == STATUS_STOPED"
-      .inner
-        .infos
-          .level.item
-            .label
-              | N =
-            .n
-              | {{ level }}
-          .score.item
-            span.label
-              i.fa.fa-heartbeat
-            Score :correct="correct" :incorrect="incorrect" :total="total"
-          .spend.item
-            span.label
-              i.fa.fa-hourglass-end
-            span.time
-              | {{ time }}
-        .buttons
-          button.again @click="start(level)"
-            i.fa.fa-refresh
-          button.home @click="home"
-            i.fa.fa-home
+      .welcome.cover v-if="isShowWelcome"
+        .inner
+          h1 N-back
+          h2 {{ t('Choose') + " N=?" }}
+          .buttons
+            button v-for="i in 9" @click="start(i)"
+              | N={{i}}
+          h3 {{ t('Giving No.X question') + ',' }}
+          h3 {{ t('answer No.(X-N) question') + '.' }}
+          h3 {{ '(' + t('Only need answer last digit of result') + ')' }}
+      .result.cover v-if="status == STATUS_STOPED"
+        .inner
+          .infos
+            .level.item
+              span.label
+                | N =
+              .n
+                | {{ level }}
+            .score.item
+              span.label
+                i.fa.fa-heartbeat
+              Score :correct="correct" :incorrect="incorrect" :total="total"
+            .spend.item
+              span.label
+                i.fa.fa-hourglass-end
+              span.time
+                | {{ time }}
+          .buttons
+            button.again @click="start(level)"
+              i.fa.fa-refresh
+            button.home @click="home"
+              i.fa.fa-home
 </template>
 
 <script>
+import Layout from '@/components/Layout.vue'
 import Score from '@/components/Score.vue'
 import Language from '@/components/Language.vue'
 import Env from '@/utils/env.js'
@@ -167,6 +166,7 @@ var selectTimeout = null
 export default {
   name: 'NBack',
   components: {
+    Layout,
     Score,
     Language
   },
@@ -258,58 +258,22 @@ export default {
 
 <style scoped lang="scss">
   @import '../theme.scss';
-  $topbar-height: .5rem;
-  $bottombar-height: .4rem;
   .page {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    header {
-      position: relative;
-      background: $color-dark;
-      font-size: .2rem;
-      height: $topbar-height;
-      color: white;
-      display: flex;
-      align-items: center;
-      .button {
-        z-index: 1;
-        margin: 0 .1rem;
-        padding: .06rem;
-        text-align: left;
-        font-size: .20rem;
-        color: white;
-        border: none;
-        background: $color-dark;
-      }
-      .space {
-        flex: 1;
-      }
-      span {
-        z-index: 0;
-        position: absolute;
-        float: left;
-        width: 100%;
-        font-size: .2rem;
-        font-weight: bold;
-        text-align: center;
-      }
-    }
-    #language {
-      position: fixed;
+    >#language {
+      position: absolute;
       z-index: 1001;
-      right: .5rem;
+      right: .1rem;
       top: .5rem;
     }
     .content {
-      display: flex;
-      flex-direction: column;
-      .number {
+      >.number {
         align-self: center;
         display: flex;
         justify-content: space-between;
         align-self: center;
-        width: 75%;
+        width: calc(100%- .2rem * 2);
         height: .3rem;
         padding: .2rem;
         font-size: .2rem;
@@ -334,7 +298,7 @@ export default {
           }
         }
       }
-      .question {
+      >.question {
         margin-top: 10%;
         padding: .2rem;
         font-size: .4rem;
@@ -342,7 +306,7 @@ export default {
         height: .4rem;
         text-align: center;
       }
-      .progress {
+      >.progress {
         border: solid 1px #aaa;
         margin: 0 10%;
         .inner {
@@ -351,7 +315,7 @@ export default {
           background: $color-green;
         }
       }
-      .answer {
+      >.answer {
         display: flex;
         width: 100%;
         margin-top: .2rem;
@@ -377,13 +341,13 @@ export default {
           }
         }
       }
-      .status {
+      >.status {
         margin: .2rem 0;
       }
-      .time {
+      >.time {
         width: 100%;
-        position: fixed;
-        bottom: .6rem;
+        position: absolute;
+        bottom: .1rem;
         font-size: .2rem;
         text-align: center;
         span {
@@ -393,149 +357,108 @@ export default {
           width: 1rem;
         }
       }
-    }
-    .cover {
-      z-index: 1000;
-      position: fixed;
-      left: 0;
-      right: 0;
-      top: $topbar-height;
-      bottom: $bottombar-height;
-      background: rgba(0,0,0, .5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      .inner {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        $width: 3rem;
-        $height: 2rem;
-        background: white;
-        width: $width;
-        height: $height;
-        border-radius: .2rem;
-      }
-    }
-    .welcome {
-      .inner {
-        height: 5rem;
-        h1 {
-          text-align: center;
-        }
-        h2 {
-          margin: 0 0 .1rem;
-          text-align: center;
-        }
-        h3 {
-          margin: 0 10%;
-          text-align: center;
-        }
-        .buttons {
-          padding: 0 .1rem;
-          margin-bottom: .1rem;
-          button {
-            width: calc(33% - .05rem * 2);
-            box-sizing: border-box;
-            margin-top: .2rem;
-            font-size: .2rem;
-            padding: .1rem;
-            margin: .05rem;
-            border-radius: .2rem;
-            border: solid 1px $color-dark;
-          }
-        }
-      }
-    }
-    .result {
-      .inner {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        $width: 3rem;
-        $height: 2rem;
-        background: white;
-        width: $width;
-        height: $height;
-        border-radius: .2rem;
-        .infos {
-          font-size: .2rem;
-          .label {
-            margin-right: .1rem;
-          }
-          .item {
-            display: flex;
-            justify-content: left;
-            &.level {
-              justify-content: center;
-              font-size: .3rem;
-            }
-          }
-        }
-        .buttons {
-          margin-top: .1rem;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-wrap: wrap;
-          width: 100%;
-          button {
-            color: white;
-            font-size: .24rem;
-            padding: .1rem;
-            margin: .05rem;
-            border-radius: .2rem;
-            width: 30%;
-            &.home {
-              background: $color-red;
-            }
-            &.again {
-              background: $color-green;
-            }
-          }
-        }
-      }
-    }
-    footer {
-      height: $bottombar-height;
-      padding: 0 .1rem;
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      color: gray;
-      box-sizing: border-box;
-      border-top: solid 1px #eee;
-      .copyright {
-        font-size: .12rem;
-        padding-right: .4rem;
+      >.cover {
+        z-index: 1000;
         position: absolute;
-        top: .05rem;
-        bottom: .0rem;
-      }
-      >a {
-        position: absolute;
+        left: 0;
+        right: 0;
         top: 0;
         bottom: 0;
-        right: .1rem;
-        line-height: $bottombar-height;
-        text-decoration:none;
-        color: gray;
-        font-size: .24rem;
+        background: rgba(0,0,0, .5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .inner {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          $width: 3rem;
+          $height: 2rem;
+          background: white;
+          width: $width;
+          height: $height;
+          border-radius: .2rem;
+        }
       }
-    }
-  }
-</style>
-
-<style lang="scss">
-  .page {
-    footer {
-      .copyright {
-        a {
-          text-decoration: none;
-          color: gray;
+      >.welcome {
+        .inner {
+          height: 5rem;
+          h1 {
+            text-align: center;
+          }
+          h2 {
+            margin: 0 0 .1rem;
+            text-align: center;
+          }
+          h3 {
+            margin: 0 10%;
+            text-align: center;
+          }
+          .buttons {
+            padding: 0 .1rem;
+            margin-bottom: .1rem;
+            button {
+              width: calc(33% - .05rem * 2);
+              box-sizing: border-box;
+              margin-top: .2rem;
+              font-size: .2rem;
+              padding: .1rem;
+              margin: .05rem;
+              border-radius: .2rem;
+              border: solid 1px $color-dark;
+            }
+          }
+        }
+      }
+      >.result {
+        .inner {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          $width: 3rem;
+          $height: 2rem;
+          background: white;
+          width: $width;
+          height: $height;
+          border-radius: .2rem;
+          .infos {
+            font-size: .2rem;
+            .label {
+              margin-right: .1rem;
+            }
+            .item {
+              display: flex;
+              justify-content: left;
+              &.level {
+                justify-content: center;
+                font-size: .3rem;
+              }
+            }
+          }
+          .buttons {
+            margin-top: .1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+            button {
+              color: white;
+              font-size: .24rem;
+              padding: .1rem;
+              margin: .05rem;
+              border-radius: .2rem;
+              width: 30%;
+              &.home {
+                background: $color-red;
+              }
+              &.again {
+                background: $color-green;
+              }
+            }
+          }
         }
       }
     }

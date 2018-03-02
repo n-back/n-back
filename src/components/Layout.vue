@@ -1,0 +1,120 @@
+<template lang="slm">
+  .page
+    header
+      slot name="header"
+    .content
+      slot name="content"
+    slot
+    footer
+      .copyright v-html="'2018 @' + config.author"
+      a.about href="https://github.com/n-back/n-back"
+        i.fa.fa-github
+</template>
+
+<style scoped lang="scss">
+@import '../theme.scss';
+$header-height: .5rem;
+$footer-height: .4rem;
+.page {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  header {
+    position: relative;
+    background: $color-dark;
+    font-size: .2rem;
+    height: $header-height;
+    color: white;
+    display: flex;
+    align-items: center;
+    .button {
+      z-index: 1;
+      margin: 0 .1rem;
+      padding: .06rem;
+      text-align: left;
+      font-size: .20rem;
+      color: white;
+      border: none;
+      background: $color-dark;
+    }
+    .space {
+      flex: 1;
+    }
+    span {
+      z-index: 0;
+      position: absolute;
+      float: left;
+      width: 100%;
+      font-size: .2rem;
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+  .content {
+    position: relative;
+    width: 100%;
+    height: calc(100% - #{$footer-height} - #{$header-height});
+  }
+  footer {
+    height: $footer-height;
+    padding: 0 .1rem;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: gray;
+    box-sizing: border-box;
+    border-top: solid 1px #eee;
+    .copyright {
+      font-size: .12rem;
+      padding-right: .4rem;
+      position: absolute;
+      top: .025rem;
+      bottom: .025rem;
+    }
+    >a {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: .1rem;
+      line-height: $footer-height;
+      text-decoration:none;
+      color: gray;
+      font-size: .24rem;
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+.page {
+  footer {
+    .copyright {
+      a {
+        text-decoration: none;
+        color: gray;
+      }
+    }
+  }
+}
+</style>
+
+<script>
+let config = {
+  author: '小霸王'
+}
+
+let xhr = new XMLHttpRequest()
+xhr.onload = (result) => Object.assign(config, JSON.parse(result.currentTarget.responseText))
+xhr.open('get', '/static/info.json')
+xhr.send()
+
+export default {
+  name: 'Layout',
+  data () {
+    return {
+      config
+    }
+  }
+}
+</script>
