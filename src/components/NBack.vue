@@ -14,70 +14,68 @@
       .button.home @click="home" v-else=""
         i.fa.fa-home
     template slot="content"
-      .number v-if="status == STATUS_START || status == STATUS_PREPARE"
-        span.q
-          span.label Q:
-          span {{ ' ' + (questions.length > count ? '--' : questions.length) }}
-        span.a
-          span.label A:
-          span {{ ' ' + (total > 0 ? total : '--') }}
-        span
-          span.label Sum:
-          span {{ count }}
-      .number v-else=""
-      .question
-        | {{ question || '--------------' }}
-      .answer v-if="status == STATUS_START"
-        .item v-for="item in aItems" @click="checkItem(item)" :class="item.correct"
-          | {{ item.index }}
-      Score :correct="correct" :incorrect="incorrect" :total="total" v-if="status == STATUS_START"
-      .progress v-if="status == STATUS_PREPARE"
-        .inner :style="{width: progressValue + '%'}"
-      .time v-if="status == STATUS_START"
-        i.fa.fa-hourglass-half
-        span {{ " = " + time }}
-      .welcome.cover v-if="isShowWelcome"
-        .inner
-          h1 N-back
-          h2 {{ t('Choose') + " N=?" }}
-          .buttons
-            button v-for="i in 9" @click="start(i)"
-              | N={{i}}
-          h3 {{ t('Giving No.X question') + ',' }}
-          h3 {{ t('answer No.(X-N) question') + '.' }}
-          h3 {{ '(' + t('Only need answer last digit of result') + ')' }}
-      .result.cover v-if="status == STATUS_STOPED"
-        .inner
-          .infos
-            .level.item
-              span.label
-                | N =
-              .n
-                | {{ level }}
-            .score.item
-              span.label
-                i.fa.fa-heartbeat
-              Score :correct="correct" :incorrect="incorrect" :total="total"
-            .spend.item
-              span.label
-                i.fa.fa-hourglass-end
-              span.time
-                | {{ time }}
-          .buttons
-            button.again @click="start(level)"
-              i.fa.fa-refresh
-            button.home @click="home"
-              i.fa.fa-home
+      .content-inner
+        .number v-if="status == STATUS_START || status == STATUS_PREPARE"
+          span.q
+            span.label Q:
+            span {{ ' ' + (questions.length > count ? '--' : questions.length) }}
+          span.a
+            span.label A:
+            span {{ ' ' + (total > 0 ? total : '--') }}
+          span
+            span.label Sum:
+            span {{ count }}
+        .number v-else=""
+        .question
+          | {{ question || '--------------' }}
+        .answer v-if="status == STATUS_START"
+          .item v-for="item in aItems" @click="checkItem(item)" :class="item.correct"
+            | {{ item.index }}
+        Score :correct="correct" :incorrect="incorrect" :total="total" v-if="status == STATUS_START"
+        .progress v-if="status == STATUS_PREPARE"
+          .inner :style="{width: progressValue + '%'}"
+        .time v-if="status == STATUS_START"
+          i.fa.fa-hourglass-half
+          span {{ " = " + time }}
+        .welcome.cover v-if="isShowWelcome"
+          .inner
+            h1 N-back
+            h2 {{ t('Choose') + " N=?" }}
+            .buttons
+              button v-for="i in 9" @click="start(i)"
+                | N={{i}}
+            h3 {{ t('Giving No.X question') + ',' }}
+            h3 {{ t('answer No.(X-N) question') + '.' }}
+            h3 {{ '(' + t('Only need answer last digit of result') + ')' }}
+        .result.cover v-if="status == STATUS_STOPED"
+          .inner
+            .infos
+              .level.item
+                span.label
+                  | N =
+                .n
+                  | {{ level }}
+              .score.item
+                span.label
+                  i.fa.fa-heartbeat
+                Score :correct="correct" :incorrect="incorrect" :total="total"
+              .spend.item
+                span.label
+                  i.fa.fa-hourglass-end
+                span.time
+                  | {{ time }}
+            .buttons
+              button.again @click="start(level)"
+                i.fa.fa-refresh
+              button.home @click="home"
+                i.fa.fa-home
 </template>
 
 <script>
 import Layout from '@/components/Layout.vue'
 import Score from '@/components/Score.vue'
 import Language from '@/components/Language.vue'
-import Env from '@/utils/env.js'
 import I18n from '@/utils/i18n.js'
-
-I18n.language(Env.get('language'))
 
 let config = {
   author: '小霸王'
@@ -267,7 +265,8 @@ export default {
       right: .1rem;
       top: .5rem;
     }
-    .content {
+    .content-inner {
+      width: 100%;
       >.number {
         align-self: center;
         display: flex;

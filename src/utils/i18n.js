@@ -1,17 +1,53 @@
+import Env from '@/utils/env.js'
+
 /* eslint-disable */
+let en_us = {
+}
 
 let zh_chs = {
+  'Global intelligence games': '风靡全球的智力游戏',
+  'Improve working memory': '提高工作记忆',
+  'Increase your focus': '增强注意力',
+  'Suitable for ': '适合',
+  ' population': '人群',
+  'Improve IQ': '提高IQ',
+
+  'Rules': '规则',
+  'Example': '例子',
+  'Start': '开始',
+  'Given a few simple math problems, calculate and note the result': '给出多道简单的算术问题,计算并记下结果',
+  'After N questions, Reply ': '在N个问题之后回复',
+  'answer\'s last digit': '答案的个位',
+  'Previous question ': '上一题',
+  'When N is 2, answer the current answer after 2 questions, and so on.': '当N是2时，在2个问题后回答当前答案，依此类推。',
+
   'Choose': '请选择',
   'Giving No.X question': '当给你第X个问题时',
   'answer No.(X-N) question': '回答第（X-N）个问题',
-  'Only need answer last digit of result': '只需回答结果的最后一位数字'
+  'Only need answer last digit of result': '只需回答结果的最后一位数字',
 }
 
 let zh_cht = {
+  'Global intelligence games': '風靡全球的智力遊戲',
+  'Improve working memory': '提高工作記憶',
+  'Increase your focus': '增強注意力',
+  'Suitable for ': '適合',
+  ' population': '人群',
+  'Improve IQ': '提高IQ',
+
+  'Rules': '規則',
+  'Example': '例子',
+  'Start': '開始',
+  'Given a few simple math problems, calculate and note the result': '給出多道簡單的算術問題,計算並記下結果',
+  'After N questions, Reply ': '在N個問題之後回復',
+  'answer\'s last digit': '答案的個位',
+  'Previous question ': '上壹題',
+  'When N is 2, answer the current answer after 2 questions, and so on.': '當N是2時，在2個問題後回答當前答案，依此類推。',
+
   'Choose': '請選擇',
   'Giving No.X question': '當給你第X個問題時',
   'answer No.(X-N) question': '回答第（X-N）個問題',
-  'Only need answer last digit of result': '只需回答結果的最後一位數字'
+  'Only need answer last digit of result': '只需回答結果的最後一位數字',
 }
 
 let zh_cn = zh_chs
@@ -23,19 +59,22 @@ let zh_mo = zh_cht
 
 /* eslint-enable */
 
-let locale = {zh_chs, zh_cht, zh_cn, zh_sg, zh_tw, zh_hk, zh_mo}
+let locale = {en_us, zh_chs, zh_cht, zh_cn, zh_sg, zh_tw, zh_hk, zh_mo}
 
 export default (() => {
   let defaultLanguage = navigator.systemLanguage || navigator.language
   let standard = (language) => (language || defaultLanguage).toLocaleLowerCase().replace('-', '_')
-  var language = standard()
+  var language = standard(Env.get('language'))
   return {
     language (value) {
-      if (value != null) language = standard(value)
+      if (value != null) {
+        language = standard(value)
+        Env.set('language', value)
+      }
       return language
     },
     t (str) {
-      return (locale[language] || {})[str] || str
+      return (locale[language] || locale[standard('en_US')])[str] || str
     }
   }
 })()

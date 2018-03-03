@@ -26,10 +26,8 @@
 </style>
 
 <script>
-import Env from '@/utils/env.js'
 import I18n from '@/utils/i18n.js'
 
-I18n.language(Env.get('language'))
 export default {
   name: 'language-select',
   props: ['show'],
@@ -47,7 +45,7 @@ export default {
       if (value != null) {
         this.selectLanguage = false
         if (value !== I18n.language()) {
-          Env.set('language', value)
+          I18n.language(value)
           location.reload()
         }
       }

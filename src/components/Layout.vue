@@ -16,6 +16,8 @@
 $header-height: .5rem;
 $footer-height: .4rem;
 .page {
+  margin: 0;
+  padding: 0;
   width: 100vw;
   height: 100vh;
   position: relative;
@@ -24,6 +26,7 @@ $footer-height: .4rem;
     background: $color-dark;
     font-size: .2rem;
     height: $header-height;
+    box-sizing: border-box;
     color: white;
     display: flex;
     align-items: center;
@@ -51,9 +54,14 @@ $footer-height: .4rem;
     }
   }
   .content {
-    position: relative;
+    overflow: auto;
+    position: fixed;
+    top: $header-height;
+    bottom: $footer-height;
+    left: 0;
+    right: 0;
     width: 100%;
-    height: calc(100% - #{$footer-height} - #{$header-height});
+    height: calc(100% - #{$header-height} - #{$footer-height});
   }
   footer {
     height: $footer-height;
@@ -63,6 +71,7 @@ $footer-height: .4rem;
     right: 0;
     bottom: 0;
     color: gray;
+    background: white;
     box-sizing: border-box;
     border-top: solid 1px #eee;
     .copyright {
