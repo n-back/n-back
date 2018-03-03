@@ -203,10 +203,11 @@ export default {
       }, 200)
     },
     startTimeCount () {
-      var time = 0
+      let getTime = () => new Date().getTime()
+      let startTime = getTime()
       let a = () => {
         if (this.status === STATUS_START && this.total < this.count) {
-          this.time = (++time / 100) + 's'
+          this.time = ((getTime() - startTime) / 1000) + 's'
           questionTimeout = setTimeout(a, 10)
         }
       }
