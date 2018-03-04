@@ -21,10 +21,10 @@ let zh_chs = {
   'Previous question ': '上一题',
   'When N is 2, answer the current answer after 2 questions, and so on.': '当N是2时，在2个问题后回答当前答案，依此类推。',
 
+  'Challenge Mode': '挑战模式',
+  'Challenge Complete': '挑战完成',
+  'Challenge Failed': '挑战失败',
   'Choose': '请选择',
-  'Giving No.X question': '当给你第X个问题时',
-  'answer No.(X-N) question': '回答第（X-N）个问题',
-  'Only need answer last digit of result': '只需回答结果的最后一位数字',
 }
 
 let zh_cht = {
@@ -44,10 +44,10 @@ let zh_cht = {
   'Previous question ': '上壹題',
   'When N is 2, answer the current answer after 2 questions, and so on.': '當N是2時，在2個問題後回答當前答案，依此類推。',
 
+  'Challenge Mode': '挑戰模式',
+  'Challenge Complete': '挑戰完成',
+  'Challenge Failed': '挑戰失敗',
   'Choose': '請選擇',
-  'Giving No.X question': '當給你第X個問題時',
-  'answer No.(X-N) question': '回答第（X-N）個問題',
-  'Only need answer last digit of result': '只需回答結果的最後一位數字',
 }
 
 let zh_cn = zh_chs

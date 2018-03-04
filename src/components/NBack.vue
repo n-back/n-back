@@ -31,7 +31,8 @@
         .answer v-if="status == STATUS_START"
           .item v-for="item in aItems" @click="checkItem(item)" :class="item.correct"
             | {{ item.index }}
-        Score :correct="correct" :incorrect="incorrect" :total="total" v-if="status == STATUS_START"
+        Score :correct="correct" :incorrect="incorrect" :total="total" v-if="status == STATUS_START && !config.challengeMode"
+        .challenge.status v-if="status == STATUS_START && config.challengeMode" {{ t('Challenge Mode') }}
         .progress v-if="status == STATUS_PREPARE"
           .inner :style="{width: progressValue + '%'}"
         .time v-if="status == STATUS_START"
@@ -44,9 +45,10 @@
             .buttons
               button v-for="i in 9" @click="start(i)"
                 | N={{i}}
-            h3 {{ t('Giving No.X question') + ',' }}
-            h3 {{ t('answer No.(X-N) question') + '.' }}
-            h3 {{ '(' + t('Only need answer last digit of result') + ')' }}
+            .challenge @click="config.challengeMode=!config.challengeMode"
+              i.fa.fa-check-square-o v-if="config.challengeMode"
+              i.fa.fa-square-o v-else=""
+              | {{ t('Challenge Mode') }}
         .result.cover v-if="status == STATUS_STOPED"
           .inner
             .infos
@@ -55,10 +57,17 @@
                   | N =
                 .n
                   | {{ level }}
-              .score.item
+              .score.item v-if="!config.challengeMode"
                 span.label
                   i.fa.fa-heartbeat
                 Score :correct="correct" :incorrect="incorrect" :total="total"
+              .score.item v-else=""
+                .challenge.success v-if="correct==total"
+                  i.fa.fa-check
+                  | {{ t('Challenge Complete') }}
+                .challenge v-else=""
+                  i.fa.fa-close
+                  | {{ t('Challenge Failed') }}
               .spend.item
                 span.label
                   i.fa.fa-hourglass-end
@@ -72,19 +81,15 @@
 </template>
 
 <script>
-import Layout from '@/components/Layout.vue'
-import Score from '@/components/Score.vue'
-import Language from '@/components/Language.vue'
-import I18n from '@/utils/i18n.js'
+import Layout from '@/components/Layout'
+import Score from '@/components/Score'
+import Language from '@/components/Language'
+import I18n from '@/utils/i18n'
+import Env from '@/utils/env'
 
 let config = {
-  author: '小霸王'
+  challengeMode: Env.get('challengeMode') || false
 }
-
-let xhr = new XMLHttpRequest()
-xhr.onload = (result) => Object.assign(config, JSON.parse(result.currentTarget.responseText))
-xhr.open('get', '/static/info.json')
-xhr.send()
 
 let STATUS_NONE = 10
 let STATUS_PREPARE = 11
@@ -171,6 +176,11 @@ export default {
   data () {
     return generateData()
   },
+  watch: {
+    'config.challengeMode': (value) => {
+      Env.set('challengeMode', value)
+    }
+  },
   methods: {
     t (value) {
       return I18n.t(value)
@@ -192,7 +202,7 @@ export default {
       a.correct = correct ? 'correct' : 'incorrect'
       correct ? ++this.correct : ++this.incorrect
       ++this.total
-      if (this.total >= this.count) {
+      if (this.total >= this.count || (this.config.challengeMode && !correct)) {
         this.status = STATUS_STOPED
         return
       }
@@ -216,7 +226,7 @@ export default {
     showQuestion () {
       this.updateQuestion()
       if (this.questions.length <= this.level) {
-        let time = 1500
+        let time = 2000
         var timeNow = time
         let counter = () => {
           if (timeNow === 0) {
@@ -344,6 +354,11 @@ export default {
       >.status {
         margin: .2rem 0;
       }
+      >.challenge {
+        text-align: center;
+        color: darkred;
+        font-size: .2rem;
+      }
       >.time {
         width: 100%;
         position: absolute;
@@ -409,6 +424,15 @@ export default {
               border: solid 1px $color-dark;
             }
           }
+          >.challenge {
+            text-align: center;
+            color: darkred;
+            font-size: .2rem;
+            i {
+              width: .2rem;
+              margin: .1rem;
+            }
+          }
         }
       }
       >.result {
@@ -434,6 +458,18 @@ export default {
               &.level {
                 justify-content: center;
                 font-size: .3rem;
+              }
+              >.challenge {
+                text-align: left;
+                color: darkred;
+                &.success {
+                  color: green;
+                }
+                font-size: .2rem;
+                i {
+                  width: .2rem;
+                  margin-right: .05rem;
+                }
               }
             }
           }
