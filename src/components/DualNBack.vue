@@ -3,7 +3,7 @@
     Language#language :show="selectLanguage && status == STATUS_NONE"
     template slot="header"
       span
-        | N-back {{ (status == STATUS_START || status == STATUS_PREPARE) ? ('(n=' + level + ')') : '' }}
+        | Dual-N-back {{ (status == STATUS_START || status == STATUS_PREPARE) ? ('(n=' + level + ')') : '' }}
       .button.retry @click="start(level)" v-if="status != STATUS_NONE"
         i.fa.fa-refresh
       router-link.button.back to="/" v-else=""
@@ -27,10 +27,18 @@
             span {{ count }}
         .number v-else=""
         .question
-          | {{ question || '--------------' }}
+          .inner
+            Grid :width="5" :position="question.p" :number="question.a"
         .answer v-if="status == STATUS_START"
-          .item v-for="item in aItems" @click="checkItem(item)" :class="item.correct"
-            | {{ item.index }}
+          .item @click="positionMatch =! positionMatch" :class="positionMatch ? 'select' : '' "
+            i.fa.fa-check-square-o v-if="positionMatch"
+            i.fa.fa-square-o v-else=""
+            | {{ t('Position match') }}
+          .item @click="contentMatch =! contentMatch" :class="contentMatch ? 'select' : '' "
+            i.fa.fa-check-square-o v-if="contentMatch"
+            i.fa.fa-square-o v-else=""
+            | {{ t('Content match') }}
+          .button @click="check" :class="buttonSelect" {{ t('OK') }}
         Score :correct="correct" :incorrect="incorrect" :total="total" v-if="status == STATUS_START && !config.challengeMode"
         .challenge.status v-if="status == STATUS_START && config.challengeMode" {{ t('Challenge Mode') }}
         .progress v-if="status == STATUS_PREPARE"
@@ -40,7 +48,7 @@
           span {{ " = " + time }}
         .welcome.cover v-if="isShowWelcome"
           .inner
-            h1 N-back
+            h1 Dual-N-back
             h2 {{ t('Choose') + " N=?" }}
             .buttons
               button v-for="i in 9" @click="start(i)"
@@ -81,12 +89,13 @@
 </template>
 
 <script>
+import Grid from '@/components/Grid'
 import Layout from '@/components/Layout'
 import Score from '@/components/Score'
 import Language from '@/components/Language'
 import I18n from '@/utils/i18n'
 import Env from '@/utils/env'
-import generateQuestion from '@/questions/n-back'
+import generateQuestion from '@/questions/dual-n-back'
 
 let config = {
   challengeMode: Env.get('challengeMode') || false
@@ -114,13 +123,10 @@ function generateData (data) {
     questions: [],
     isShowWelcome: false,
     isAnswering: false,
+    positionMatch: false,
+    contentMatch: false,
+    buttonSelect: '',
     status: STATUS_NONE,
-    aItems: new Array(10).fill({}).map((el, i) => {
-      return {
-        index: i,
-        correct: ''
-      }
-    }),
     config,
     ...data
   }
@@ -130,8 +136,9 @@ var questionTimeout = null
 var selectTimeout = null
 
 export default {
-  name: 'NBack',
+  name: 'DualNBack',
   components: {
+    Grid,
     Layout,
     Score,
     Language
@@ -149,20 +156,21 @@ export default {
       return I18n.t(value)
     },
     updateQuestion () {
-      if ((this.status === STATUS_START || this.status === STATUS_PREPARE) && this.questions.length < this.count) {
-        let a = generateQuestion()
-        this.question = a.q
+      if ((this.status === STATUS_START || this.status === STATUS_PREPARE)) {
+        let a = generateQuestion(this.questions[this.questions.length - this.level])
+        this.question = a
         this.questions.push(a)
-      } else {
-        this.question = null
       }
     },
-    checkItem (a) {
+    check () {
       if (this.isAnswering) return
       this.isAnswering = true
       let question = this.questions[this.total]
-      let correct = question !== null && question.a === a.index
-      a.correct = correct ? 'correct' : 'incorrect'
+      let currentQuestion = this.questions[this.questions.length - 1]
+      let correct = ((question.p === currentQuestion.p) === this.positionMatch) && ((question.a === currentQuestion.a) === this.contentMatch)
+      this.positionMatch = false
+      this.contentMatch = false
+      this.buttonSelect = correct ? 'correct' : 'incorrect'
       correct ? ++this.correct : ++this.incorrect
       ++this.total
       if (this.total >= this.count || (this.config.challengeMode && !correct)) {
@@ -170,7 +178,7 @@ export default {
         return
       }
       selectTimeout = setTimeout(() => {
-        a.correct = ''
+        this.buttonSelect = ''
         this.updateQuestion()
         this.isAnswering = false
       }, 200)
@@ -233,31 +241,47 @@ export default {
   .page {
     .content-inner {
       >.question {
-        margin-top: 10%;
-        padding: .2rem;
-        font-size: .4rem;
-        line-height: .4rem;
-        height: .4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: .1rem;
         text-align: center;
+        .inner {
+          width: 2rem;
+          line-height: .4rem;
+          font-size: .3rem;
+        }
       }
       >.answer {
         display: flex;
         width: 100%;
-        margin-top: .2rem;
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;
         .item {
-          width: calc(20% - .1rem * 2);
-          height: .6rem;
-          line-height: .5rem;
+          width: calc(50% - .1rem * 2);
+          height: .5rem;
+          line-height: .4rem;
           padding: .05rem;
           margin: .05rem;
-          border-radius: .05rem;
           box-sizing: border-box;
-          border: solid 1px #ccc;
           text-align: center;
           font-size: .2rem;
+          i {
+            width: .3rem;
+            margin-right: .05rem;
+          }
+          &.select {
+          }
+        }
+        .button {
+          border: solid 1px gray;
+          border-radius: .05rem;
+          background: white;
+          margin-top: .1rem;
+          padding: .05rem .5rem;
+          font-size: .25rem;
+          border-radius: .05rem;
           &.correct {
             background: $color-correct;
           }

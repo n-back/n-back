@@ -25,6 +25,10 @@ let zh_chs = {
   'Challenge Complete': '挑战完成',
   'Challenge Failed': '挑战失败',
   'Choose': '请选择',
+
+  'Position match': '位置匹配',
+  'Content match': '内容匹配',
+  'OK': '确认',
 }
 
 let zh_cht = {
@@ -48,6 +52,10 @@ let zh_cht = {
   'Challenge Complete': '挑戰完成',
   'Challenge Failed': '挑戰失敗',
   'Choose': '請選擇',
+
+  'Position match': '位置匹配',
+  'Content match': '內容匹配',
+  'OK': '確認',
 }
 
 let zh_cn = zh_chs
