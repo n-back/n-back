@@ -33,6 +33,7 @@ let zh_chs = {
 
   'Position match': '位置匹配',
   'Content match': '内容匹配',
+  'No match, pass': '无匹配, 跳过',
   'OK': '确认',
 }
 
@@ -65,6 +66,7 @@ let zh_cht = {
 
   'Position match': '位置匹配',
   'Content match': '內容匹配',
+  'No match, pass': '無匹配, 跳過',
   'OK': '確認',
 }
 

@@ -51,6 +51,16 @@
               | A2:
             span {{ 'Q2: ' + t('Position match') }}
           br
+          li
+            .q
+              | Q4:
+            .question
+              Grid :width="5" content="G" position="16"
+          li
+            .a
+              | A3:
+            span {{ 'Q3: ' + t('No match, pass') }}
+          br
           span.seperate
             | ........................
           br
