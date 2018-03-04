@@ -21,6 +21,11 @@ let zh_chs = {
   'Previous question ': '上一题',
   'When N is 2, answer the current answer after 2 questions, and so on.': '当N是2时，在2个问题后回答当前答案，依此类推。',
 
+  'Record the letter and its position in the grid': '记录字母以及它在格子中的位置',
+  'Compare with the next Nth question that ': '与之后的第N个问题比较',
+  'position and content if they are match': '位置和内容是否一致',
+  'When N is 2, compare the 2-question with the current one, and so on.': '当N是2时，把当前问题与之后的第2个问题比较，依此类推。',
+
   'Challenge Mode': '挑战模式',
   'Challenge Complete': '挑战完成',
   'Challenge Failed': '挑战失败',
@@ -47,6 +52,11 @@ let zh_cht = {
   'answer\'s last digit': '答案的個位',
   'Previous question ': '上壹題',
   'When N is 2, answer the current answer after 2 questions, and so on.': '當N是2時，在2個問題後回答當前答案，依此類推。',
+
+  'Record the letter and its position in the grid': '記錄字母以及它在格子中的位置',
+  'Compare with the next Nth question that ': '與之後的第N個問題比較',
+  'position and content if they are match': '位置和內容是否壹致',
+  'When N is 2, compare the 2-question graph with the current one, and so on.': '當N是2時，把當前問題與之後的第2個問題比較，依此類推。',
 
   'Challenge Mode': '挑戰模式',
   'Challenge Complete': '挑戰完成',

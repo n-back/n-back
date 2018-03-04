@@ -1,7 +1,7 @@
 <template lang="slm">
   .grid
     .item v-for="index in width * width" :style="{width: style_width, 'padding-top': style_width}"
-      span v-if="index-1==position" {{ number }}
+      span v-if="index-1==position" {{ content }}
 </template>
 
 <style scoped lang="scss">
@@ -12,7 +12,7 @@
   align-items: center;
   .item {
     position: relative;
-    border: solid .5px #ccc;
+    border: solid .25px #ccc;
     box-sizing: border-box;
     height: 0;
     span {
@@ -21,6 +21,7 @@
       right: 0;
       top: 0;
       bottom: 0;
+      text-align: center;
     }
   }
 }
@@ -38,7 +39,7 @@ export default {
     position: {
       required: true
     },
-    number: {
+    content: {
       required: true
     },
     width: {

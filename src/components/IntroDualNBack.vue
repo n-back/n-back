@@ -3,7 +3,7 @@
     Language#language :show="selectLanguage"
     template slot="header"
       span
-        | N-back
+        | Dual-N-back
       router-link.button.back to="/"
         i.fa.fa-chevron-left
       .space
@@ -13,18 +13,18 @@
       .intro
         h2 {{ t('Rules') }}
         ul
-          li {{ t('Given a few simple math problems, calculate and note the result') }}
+          li {{ t('Record the letter and its position in the grid') }}
           li
-            | {{ t('After N questions, Reply ') }}
-            b {{ t('answer\'s last digit') }}
+            | {{ t('Compare with the next Nth question that ') }}
+            b {{ t('position and content if they are match') }}
         br
         h3 {{ t('Example') + ": N=1" }}
         ul
           li
             .q
               | Q1:
-            span
-              | 1+2=?
+            .question
+              Grid :width="5" content="A" position="0"
           li
             .a
               | A:
@@ -34,24 +34,22 @@
           li
             .q
               | Q2:
-            span
-              | 3*4=?
+            .question
+              Grid :width="5" content="A" position="24"
           li
             .a
               | A1:
-            span
-              | 3  (Q1: 1+2=<b>3</b>)
+            span {{ 'Q1: ' + t('Content match') }}
           br
           li
             .q
               | Q3:
-            span
-              | 5*6=?
+            .question
+              Grid :width="5" content="Z" position="24"
           li
             .a
               | A2:
-            span
-              | 2  (Q2: 3*4=1<b>2</b>)
+            span {{ 'Q2: ' + t('Position match') }}
           br
           span.seperate
             | ........................
@@ -60,26 +58,25 @@
           li
             .q
               | Qn:
-            span
-              | 5+5=?
+            .question
+              Grid :width="5" content="H" position="12"
           li
             .a
               | An-1:
             span
-              | ? (Qn-1: ?)
+              | Qn-1: (?)
           br
           li
             .q
-              | Q:
-            span
-              | -------
+              | Qn+1:
+            .question
+              Grid :width="5" content="H" position="12"
           li
             .a
               | An:
-            span
-              | 0 (Qn: 5+5)
-        b {{ t('When N is 2, answer the current answer after 2 questions, and so on.') }}
-        router-link.button to="/n-back" {{ t('Start') }}
+            span {{ 'Qn: ' + t('Position match') + '&' + t('Content match') }}
+        b {{ t('When N is 2, compare the 2-question with the current one, and so on.') }}
+        router-link.button to="/dual-n-back" {{ t('Start') }}
 </template>
 
 <style scoped lang="scss">
@@ -107,6 +104,14 @@
       padding: .05rem;
       span {
         margin-left: .2rem;
+      }
+      .question {
+        margin-left: .1rem;
+        display: inline-block;
+        width: 1rem;
+        line-height: .2rem;
+        font-size: .15rem;
+        text-align: center;
       }
     }
     .q, .a, span {
@@ -149,6 +154,7 @@ h1,h2,h3,h4,h5,h6,p {
 
 <script>
 import Layout from '@/components/Layout'
+import Grid from '@/components/Grid'
 import Language from '@/components/Language'
 import I18n from '@/utils/i18n'
 
@@ -161,6 +167,7 @@ export default {
   },
   components: {
     Layout,
+    Grid,
     Language
   },
   methods: {

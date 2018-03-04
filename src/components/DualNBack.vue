@@ -28,7 +28,7 @@
         .number v-else=""
         .question
           .inner
-            Grid :width="5" :position="question.p" :number="question.a"
+            Grid :width="5" :position="question.p" :content="question.a"
         .answer v-if="status == STATUS_START"
           .item @click="positionMatch =! positionMatch" :class="positionMatch ? 'select' : '' "
             i.fa.fa-check-square-o v-if="positionMatch"
