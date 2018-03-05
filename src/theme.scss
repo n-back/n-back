@@ -7,4 +7,5 @@ $color-correct: $color-green;
 $color-error: $color-red;
 $color-dark: #333;
 
-@import 'font-awesome/css/font-awesome.min.css';
+$fa-font-path: "~font-awesome/fonts";
+@import '~font-awesome/scss/font-awesome';
