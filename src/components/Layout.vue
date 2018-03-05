@@ -113,10 +113,7 @@ let config = {
   author: '小霸王'
 }
 
-let xhr = new XMLHttpRequest()
-xhr.onload = (result) => Object.assign(config, JSON.parse(result.currentTarget.responseText))
-xhr.open('get', '/static/info.json')
-xhr.send()
+if (window.configData != null) Object.assign(config, window.configData())
 
 export default {
   name: 'Layout',
