@@ -57,7 +57,7 @@ let zh_cht = {
   'Record the letter and its position in the grid': '記錄字母以及它在格子中的位置',
   'Compare with the next Nth question that ': '與之後的第N個問題比較',
   'position and content if they are match': '位置和內容是否壹致',
-  'When N is 2, compare the 2-question graph with the current one, and so on.': '當N是2時，把當前問題與之後的第2個問題比較，依此類推。',
+  'When N is 2, compare the 2-question with the current one, and so on.': '當N是2時，把當前問題與之後的第2個問題比較，依此類推。',
 
   'Challenge Mode': '挑戰模式',
   'Challenge Complete': '挑戰完成',
