@@ -243,8 +243,8 @@ export default {
       }
       >.answer {
         display: flex;
-        width: 100%;
-        margin-top: .2rem;
+        width: 4rem;
+        margin: .2rem auto 0;
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;

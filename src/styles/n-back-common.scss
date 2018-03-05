@@ -59,8 +59,6 @@
     }
     >.time {
       width: 100%;
-      position: absolute;
-      bottom: .1rem;
       font-size: .2rem;
       text-align: center;
       span {
@@ -92,8 +90,7 @@
     }
     >.welcome {
       .inner {
-        width: 70%;
-        height: 70%;
+        padding: .2rem;
         h1 {
           text-align: center;
         }
@@ -108,6 +105,7 @@
         .buttons {
           padding: 0 .1rem;
           margin-bottom: .1rem;
+          width: 2.4rem;
           button {
             width: calc(33% - .05rem * 2);
             box-sizing: border-box;
