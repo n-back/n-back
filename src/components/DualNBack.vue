@@ -197,14 +197,15 @@ export default {
     showQuestion () {
       this.updateQuestion()
       if (this.questions.length <= this.level) {
+        let getTime = () => new Date().getTime()
         let time = 2000
-        var timeNow = time
+        let endTime = getTime() + time
         let counter = () => {
-          if (timeNow === 0) {
+          let timeNow = endTime - getTime()
+          if (timeNow <= 0) {
             this.showQuestion()
             return
           }
-          timeNow -= 10
           this.progressValue = timeNow * 100 / time
           questionTimeout = setTimeout(counter, 10)
         }

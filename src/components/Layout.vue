@@ -47,8 +47,9 @@ $footer-height: .4rem;
     span {
       z-index: 0;
       position: absolute;
-      float: left;
       width: 100%;
+      height: 100%;
+      line-height: $header-height;
       font-size: .2rem;
       font-weight: bold;
       text-align: center;
