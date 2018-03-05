@@ -243,13 +243,14 @@ export default {
       }
       >.answer {
         display: flex;
-        width: 4rem;
+        max-width: 4rem;
         margin: .2rem auto 0;
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;
         .item {
           width: calc(20% - .1rem * 2);
+          max-width: .6rem;
           height: .6rem;
           line-height: .5rem;
           padding: .05rem;
