@@ -26,7 +26,7 @@
             span.label Sum:
             span {{ count }}
         .number v-else=""
-        .question
+        .question v-if="status == STATUS_START || status == STATUS_PREPARE"
           | {{ question || '--------------' }}
         .answer v-if="status == STATUS_START"
           .item v-for="item in aItems" @click="checkItem(item)" :class="item.correct"
@@ -258,6 +258,7 @@ export default {
           border: solid 1px #ccc;
           text-align: center;
           font-size: .2rem;
+          cursor: pointer;
           &.correct {
             background: $color-correct;
           }

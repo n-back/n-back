@@ -39,6 +39,7 @@ $footer-height: .4rem;
       color: white;
       border: none;
       background: $color-dark;
+      cursor: pointer;
     }
     .space {
       flex: 1;

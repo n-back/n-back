@@ -26,7 +26,7 @@
             span.label Sum:
             span {{ count }}
         .number v-else=""
-        .question
+        .question v-if="status == STATUS_START || status == STATUS_PREPARE"
           .inner
             Grid :width="5" :position="question.p" :content="question.a"
         .answer v-if="status == STATUS_START"
@@ -267,6 +267,7 @@ export default {
           box-sizing: border-box;
           text-align: center;
           font-size: .2rem;
+          cursor: pointer;
           i {
             width: .3rem;
             margin-right: .05rem;
@@ -282,6 +283,7 @@ export default {
           padding: .05rem .5rem;
           font-size: .25rem;
           border-radius: .05rem;
+          cursor: pointer;
           &.correct {
             background: $color-correct;
           }

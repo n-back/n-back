@@ -15,6 +15,7 @@
   span {
     padding: .08rem .1rem;
     font-size: .2rem;
+    cursor: pointer;
     &+span {
       border-top: solid .1px white;
     }

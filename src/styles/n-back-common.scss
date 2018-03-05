@@ -120,12 +120,14 @@
             margin: .05rem;
             border-radius: .2rem;
             border: solid 1px $color-dark;
+            cursor: pointer;
           }
         }
         >.challenge {
           text-align: center;
           color: darkred;
           font-size: .2rem;
+          cursor: pointer;
           i {
             width: .2rem;
             margin: .1rem;
@@ -185,6 +187,7 @@
             margin: .05rem;
             border-radius: .2rem;
             width: 30%;
+            cursor: pointer;
             &.home {
               background: $color-red;
             }
