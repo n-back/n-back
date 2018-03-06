@@ -19,7 +19,7 @@
             b {{ t('answer\'s last digit') }}
         br
         h3 {{ t('Example') + ": N=1" }}
-        ul
+        ul.example
           li
             .q
               | Q1:
@@ -113,9 +113,6 @@
       font-size: .16rem;
       display: inline-block;
     }
-    .q, .a {
-      width: 1rem;
-    }
     .q {
       color: $color-green;
     }
@@ -125,6 +122,15 @@
     ul {
       margin: 0;
       padding: .1rem .2rem;
+      &.example {
+        width: 70%;
+        li {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
     }
     >b {
       align-self: center;
