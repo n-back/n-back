@@ -6,15 +6,15 @@
       slot name="content"
     slot
     footer
-      .copyright v-html="'2018 @' + config.author"
+      .copyright v-html="'2022-2032 @' + config.author"
       a.about href="https://github.com/n-back/n-back"
         i.fa.fa-github
 </template>
 
 <style scoped lang="scss">
 @import '../theme.scss';
-$header-height: .5rem;
-$footer-height: .4rem;
+$header-height: 0.5rem;
+$footer-height: 0.4rem;
 .page {
   margin: 0;
   padding: 0;
@@ -24,7 +24,7 @@ $footer-height: .4rem;
   header {
     position: relative;
     background: $color-dark;
-    font-size: .2rem;
+    font-size: 0.2rem;
     height: $header-height;
     box-sizing: border-box;
     color: white;
@@ -32,10 +32,10 @@ $footer-height: .4rem;
     align-items: center;
     .button {
       z-index: 1;
-      margin: 0 .1rem;
-      padding: .06rem;
+      margin: 0 0.1rem;
+      padding: 0.06rem;
       text-align: left;
-      font-size: .20rem;
+      font-size: 0.2rem;
       color: white;
       border: none;
       background: $color-dark;
@@ -50,7 +50,7 @@ $footer-height: .4rem;
       width: 100%;
       height: 100%;
       line-height: $header-height;
-      font-size: .2rem;
+      font-size: 0.2rem;
       font-weight: bold;
       text-align: center;
     }
@@ -67,7 +67,7 @@ $footer-height: .4rem;
   }
   footer {
     height: $footer-height;
-    padding: 0 .1rem;
+    padding: 0 0.1rem;
     position: fixed;
     left: 0;
     right: 0;
@@ -77,21 +77,21 @@ $footer-height: .4rem;
     box-sizing: border-box;
     border-top: solid 1px #eee;
     .copyright {
-      font-size: .12rem;
-      padding-right: .4rem;
+      font-size: 0.12rem;
+      padding-right: 0.4rem;
       position: absolute;
-      top: .025rem;
-      bottom: .025rem;
+      top: 0.025rem;
+      bottom: 0.025rem;
     }
-    >a {
+    > a {
       position: absolute;
       top: 0;
       bottom: 0;
-      right: .1rem;
+      right: 0.1rem;
       line-height: $footer-height;
-      text-decoration:none;
+      text-decoration: none;
       color: gray;
-      font-size: .24rem;
+      font-size: 0.24rem;
     }
   }
 }
@@ -112,7 +112,7 @@ $footer-height: .4rem;
 
 <script>
 let config = {
-  author: '小霸王'
+  author: 'n-back'
 }
 
 if (window.configData != null) Object.assign(config, window.configData())

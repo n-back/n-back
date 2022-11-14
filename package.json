@@ -2,7 +2,7 @@
   "name": "n-back",
   "version": "1.0.0",
   "description": "n-back training",
-  "author": "adhd",
+  "author": "n-back",
   "private": true,
   "scripts": {
     "dev": "HOST=0.0.0.0 PORT=18080 webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

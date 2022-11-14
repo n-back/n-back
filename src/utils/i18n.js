@@ -8,7 +8,6 @@ let zh_chs = {
   'Global intelligence games': '风靡全球的智力游戏',
   'Improve working memory': '提高工作记忆',
   'Increase your focus': '增强注意力',
-  'Suitable for ': '适合',
   ' population': '人群',
   'Improve IQ': '提高IQ',
 
@@ -41,7 +40,6 @@ let zh_cht = {
   'Global intelligence games': '風靡全球的智力遊戲',
   'Improve working memory': '提高工作記憶',
   'Increase your focus': '增強注意力',
-  'Suitable for ': '適合',
   ' population': '人群',
   'Improve IQ': '提高IQ',
 

@@ -14,11 +14,6 @@
         li {{ t('Improve working memory') }}
         li {{ t('Improve IQ') }}
         li {{ t('Increase your focus') }}
-        li
-          | {{ t('Suitable for ') }}
-          a href="https://en.wikipedia.org/wiki/ADHD"
-            | ADHD
-          | {{ t(' population') }}
       .type
         span
           | Single N-back
@@ -32,13 +27,13 @@
 </template>
 
 <style lang="scss">
-@import '../theme.scss';
+@import "../theme.scss";
 .page {
-  >#language {
+  > #language {
     position: absolute;
     z-index: 1001;
-    right: .1rem;
-    top: .5rem;
+    right: 0.1rem;
+    top: 0.5rem;
   }
   .content {
     display: flex;
@@ -49,19 +44,19 @@
     }
     ul {
       li {
-        font-size: .2rem;
+        font-size: 0.2rem;
       }
     }
     .type {
       display: flex;
       align-items: center;
-      width: calc(100% - .2rem);
+      width: calc(100% - 0.2rem);
       box-sizing: border-box;
-      border-radius: .05rem;
+      border-radius: 0.05rem;
       border: solid 1px $color-gray;
-      margin: .1rem;
-      padding: .1rem;
-      font-size: .2rem;
+      margin: 0.1rem;
+      padding: 0.1rem;
+      font-size: 0.2rem;
       span {
         flex: 1;
       }
@@ -70,10 +65,10 @@
         color: black;
         background: white;
         border: solid 1px $color-gray;
-        border-radius: .05rem;
-        padding: .05rem;
-        &+a {
-          margin-left: .1rem;
+        border-radius: 0.05rem;
+        padding: 0.05rem;
+        & + a {
+          margin-left: 0.1rem;
         }
       }
     }
@@ -98,7 +93,7 @@ export default {
     Language
   },
   methods: {
-    t: (value) => I18n.t(value)
+    t: value => I18n.t(value)
   }
 }
 </script>
