@@ -198,7 +198,7 @@ export default {
       this.updateQuestion()
       if (this.questions.length <= this.level) {
         let getTime = () => new Date().getTime()
-        let time = 2000
+        let time = config.challengeMode ? 2000 : 5000
         let endTime = getTime() + time
         let counter = () => {
           let timeNow = endTime - getTime()
