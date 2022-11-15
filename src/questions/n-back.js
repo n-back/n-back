@@ -18,14 +18,14 @@ export default () => {
     },
     () => {
       return {
-        q: a + ' * ' + b + ' = ? ',
+        q: a + ' x ' + b + ' = ? ',
         a: a * b % 10
       }
     },
     () => {
       let c = a * b
       return {
-        q: c + ' / ' + b + ' = ? ',
+        q: c + ' ÷ ' + b + ' = ? ',
         a: a % 10
       }
     }
