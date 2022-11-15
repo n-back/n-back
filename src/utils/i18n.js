@@ -25,6 +25,10 @@ let zh_chs = {
   'position and content if they are match': '位置和内容是否一致',
   'When N is 2, compare the 2-question with the current one, and so on.': '当N是2时，把当前问题与之后的第2个问题比较，依此类推。',
 
+  'Give a picture': '给出一张图片',
+  'After N questions, choose correct picture': '在N个问题之后选出正确图片',
+  'graphics': '图片集',
+
   'Challenge Mode': '挑战模式',
   'Challenge Complete': '挑战完成',
   'Challenge Failed': '挑战失败',
@@ -56,6 +60,10 @@ let zh_cht = {
   'Compare with the next Nth question that ': '與之後的第N個問題比較',
   'position and content if they are match': '位置和內容是否壹致',
   'When N is 2, compare the 2-question with the current one, and so on.': '當N是2時，把當前問題與之後的第2個問題比較，依此類推。',
+
+  'Give a picture': '給出一張圖片',
+  'After N questions, choose correct picture': '在N個問題之後選出正確圖片',
+  'graphics': '圖片集',
 
   'Challenge Mode': '挑戰模式',
   'Challenge Complete': '挑戰完成',

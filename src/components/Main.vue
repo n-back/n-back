@@ -24,6 +24,11 @@
           | Dual N-back
         router-link to="/intro-dual-n-back" {{ t('Rules') }}
         router-link to="/dual-n-back" {{ t('Start') }}
+      .type
+        span
+          | Graphic N-back
+        router-link to="/intro-graphic-n-back" {{ t('Rules') }}
+        router-link to="/graphic-n-back" {{ t('Start') }}
 </template>
 
 <style lang="scss">

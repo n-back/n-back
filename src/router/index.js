@@ -5,6 +5,8 @@ import NBack from '@/components/NBack'
 import DualNBack from '@/components/DualNBack'
 import IntroNBack from '@/components/IntroNBack'
 import IntroDualNBack from '@/components/IntroDualNBack'
+import GraphicNBack from '@/components/GraphicNBack'
+import IntroGraphicNBack from '@/components/IntroGraphicNBack'
 
 Vue.use(Router)
 
@@ -29,6 +31,14 @@ export default new Router({
     {
       path: '/dual-n-back',
       component: DualNBack
+    },
+    {
+      path: '/intro-graphic-n-back',
+      component: IntroGraphicNBack
+    },
+    {
+      path: '/graphic-n-back',
+      component: GraphicNBack
     }
   ]
 })
